@@ -1,0 +1,13 @@
+[project]
+name = "deep-agent-langgraph"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain-deepseek>=0.1.4",
+    "langchain-qwq>=0.2.1",
+    "langgraph>=0.6.6",
+    "langgraph-cli[inmem]>=0.3.8",
+    "python-dotenv>=1.1.1",
+]
