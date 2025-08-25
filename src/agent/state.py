@@ -22,10 +22,6 @@ class StateInput(MessagesState):
     pass
 
 
-class TaskMessage(MessagesState):
-    task_name: str
-
-
 class State(MessagesState, total=False):
     todo: list[Todo]
     task_messages: Annotated[list[AnyMessage], add_messages]
