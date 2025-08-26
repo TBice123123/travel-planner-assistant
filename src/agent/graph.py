@@ -6,7 +6,6 @@ from src.agent.sub_agent.graph import build_sub_agent
 from src.agent.write_agent.graph import build_write_agent
 from dotenv import load_dotenv
 
-
 load_dotenv(dotenv_path=".env", override=True)
 
 

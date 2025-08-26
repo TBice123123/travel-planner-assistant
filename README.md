@@ -32,7 +32,8 @@ cp .env.example .env
 
 - `DASHSCOPE_API_KEY`
 - `DASHSCOPE_API_BASE`
-- `DEEPSEEK_API_KEY`
+- `DEEPSEEK_API_KEY` (可选,如果不设置，则需要采用硅基流动模型，设置`SILICONFLOW_API_KEY`)
+- `TAVILY_API_KEY`
 
 启动项目
 

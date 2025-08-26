@@ -6,6 +6,7 @@ from langgraph.prebuilt import InjectedState
 from langgraph.types import Command
 
 from src.agent.state import State, Todo
+from langchain_tavily.tavily_search import TavilySearch
 
 
 @tool
@@ -133,6 +134,7 @@ def write_note(
     file_name: Annotated[str, "笔记的名称"],
     content: Annotated[str, "笔记的内容"],
     tool_call_id: Annotated[str, InjectedToolCallId],
+    state: Annotated[State, InjectedState],
 ):
     """用于写入笔记的工具。
 
@@ -140,6 +142,9 @@ def write_note(
     content: str, 笔记内容
 
     """
+    if file_name in state["note"] if "note" in state else {}:
+        notes = state["note"] if "note" in state else {}
+        file_name = file_name + "_" + str(len(notes[file_name]))
 
     return Command(
         update={
@@ -194,3 +199,9 @@ def get_weather(city: str):
 
     """
     return f"{city}的天气是晴天，温度是25度。"
+
+
+tavily_search = TavilySearch(
+    max_results=5,
+    description="互联网搜索工具，用于获取最新的网络信息和资料。注意：为控制上下文长度和降低调用成本，每个任务执行过程中仅可调用一次此工具。",
+)

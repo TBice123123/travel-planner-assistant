@@ -1,9 +1,9 @@
 from typing import cast
 from langchain_core.messages import AIMessage, ToolMessage
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_qwq import ChatQwen
 from src.agent.state import State
 from src.agent.tools import write_note
+from src.agent.utils import load_chat_model
 from src.agent.write_agent.prompts import WRITE_PROMPT
 from langgraph.prebuilt import ToolNode
 
@@ -11,9 +11,9 @@ from langgraph.prebuilt import ToolNode
 async def write(state: State):
     task_messages = state["task_messages"] if "task_messages" in state else []
 
-    model = ChatQwen(model="qwen-flash").bind_tools(
-        [write_note], tool_choice="write_note"
-    )
+    model = load_chat_model(
+        model_name="qwen-flash", model_provider="dashscope"
+    ).bind_tools([write_note], tool_choice="write_note")
 
     chain = ChatPromptTemplate.from_template(WRITE_PROMPT) | model
 

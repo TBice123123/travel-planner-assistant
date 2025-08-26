@@ -2,7 +2,6 @@ from typing import Literal
 
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_deepseek import ChatDeepSeek
 from langgraph.prebuilt import ToolNode
 from langgraph.types import Command
 
@@ -15,13 +14,14 @@ from src.agent.tools import (
     update_todo,
     write_todo,
 )
+from src.agent.utils import load_chat_model
 
 
 async def call_model(state: State) -> Command[Literal["tools", "subagent", "__end__"]]:
-    model = ChatDeepSeek(model="deepseek-chat")
-    # model = ChatDeepSeek(model="deepseek-ai/DeepSeek-V3.1") 如果使用硅基流动的模型请使用这个模型名称，同时设置DEEPSEEK_API_KEY和DEEPSEEK_API_BASE两个环境变量
-    # model = ChatQwen(model="qwen3-235b-a22b-instruct-2507")
-
+    model = load_chat_model(model_name="deepseek-chat", model_provider="deepseek")
+    # model = load_chat_model(
+    #     model_name="deepseek-ai/DeepSeek-V3.1", model_provider="siliconflow"
+    # )  # 需要设置SILICONFLOW_API_KEY，可以不需要设置SILICONFLOW_API_BASE,此函数用于集成硅基流动的模型
     tools = [
         write_todo,
         update_todo,

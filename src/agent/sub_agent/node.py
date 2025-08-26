@@ -2,13 +2,13 @@ from typing import Literal, cast
 
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_qwq import ChatQwen
 from langgraph.prebuilt import ToolNode
 from langgraph.types import Command
 
 from src.agent.state import State
 from src.agent.sub_agent.prompts import SUBAGENT_PROMPT
-from src.agent.tools import get_weather, query_note
+from src.agent.tools import get_weather, query_note, tavily_search
+from src.agent.utils import load_chat_model
 
 
 async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__end__"]]:
@@ -22,9 +22,9 @@ async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__e
         ]
     )
 
-    model = ChatQwen(model="qwen3-235b-a22b-instruct-2507").bind_tools(
-        [get_weather, query_note]
-    )
+    model = load_chat_model(
+        model_name="qwen3-235b-a22b-instruct-2507", model_provider="dashscope"
+    ).bind_tools([get_weather, tavily_search, query_note])
 
     chain = prompt | model
     task_messages = state["task_messages"] if "task_messages" in state else []
@@ -65,4 +65,6 @@ async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__e
     )
 
 
-sub_tools = ToolNode([get_weather, query_note], messages_key="task_messages")
+sub_tools = ToolNode(
+    [get_weather, tavily_search, query_note], messages_key="task_messages"
+)
