@@ -43,6 +43,7 @@ async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__e
             "task_name": task_name,
             "history_files": "\n".join([f"- {note_name}" for note_name in notes.keys()])
             or "暂无历史记录文件",
+            "user_requirement": state["messages"][0].content,
         }
     )
 
