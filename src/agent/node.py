@@ -19,6 +19,7 @@ from src.agent.tools import (
 
 async def call_model(state: State) -> Command[Literal["tools", "subagent", "__end__"]]:
     model = ChatDeepSeek(model="deepseek-chat")
+    # model = ChatDeepSeek(model="deepseek-ai/DeepSeek-V3.1") 如果使用硅基流动的模型请使用这个模型名称，同时设置DEEPSEEK_API_KEY和DEEPSEEK_API_BASE两个环境变量
     # model = ChatQwen(model="qwen3-235b-a22b-instruct-2507")
 
     tools = [

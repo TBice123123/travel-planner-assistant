@@ -7,7 +7,7 @@ from src.agent.write_agent.graph import build_write_agent
 from dotenv import load_dotenv
 
 
-load_dotenv()
+load_dotenv(dotenv_path=".env", override=True)
 
 
 def build_graph_with_langgraph_studio():
