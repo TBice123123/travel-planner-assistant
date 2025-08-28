@@ -19,9 +19,6 @@ from src.agent.utils import load_chat_model
 
 async def call_model(state: State) -> Command[Literal["tools", "subagent", "__end__"]]:
     model = load_chat_model(model_name="deepseek-chat", model_provider="deepseek")
-    # model = load_chat_model(
-    #     model_name="deepseek-ai/DeepSeek-V3.1", model_provider="siliconflow"
-    # )  # 需要设置SILICONFLOW_API_KEY，可以不需要设置SILICONFLOW_API_BASE,此函数用于集成硅基流动的模型
     tools = [
         write_todo,
         update_todo,
