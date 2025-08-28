@@ -108,13 +108,14 @@ def update_todo(
 @tool
 async def transfor_task_to_subagent(
     content: Annotated[
-        str, "当前待执行的todo任务内容，必须与todo列表中待办事项的content字段完全一致"
+        str,
+        "当前待执行的todo任务内容，必须与todo列表中待办事项的content字段完全一致，但是当子智能体执行的任务有误时，重试的时候可以适当改写",
     ],
 ):
     """用于执行todo任务的工具。
 
     参数：
-    content: str, 待执行的todo任务内容，必须与todo列表中待办事项的content字段完全一致
+    content: str, 待执行的todo任务内容，必须与todo列表中待办事项的content字段完全一致，但是当子智能体执行的任务有误时，重试的时候可以适当改写
 
     例如当前的todo list是
     [

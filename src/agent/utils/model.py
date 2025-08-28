@@ -5,12 +5,18 @@ from langchain_qwq import ChatQwen
 from typing import cast
 
 
+# 支持的模型提供商类型定义
+# deepseek: DeepSeek API (深度求索)
+# dashscope: 阿里云 DashScope 平台 (包含通义千问等模型)
+# siliconflow: SiliconFlow 平台 (硅基流动，提供多种开源模型服务)
+# moonshot: Moonshot AI (月之暗面，提供 Kimi 等大模型)
 type ModelProvider = Literal["deepseek", "dashscope", "siliconflow", "moonshot"]
 
 
 def _get_model_name_and_provider(
     model_name: str,
 ) -> tuple[Optional[ModelProvider], str]:
+    # 解析格式如 "provider:model_name" 或 "model_name"
     if ":" in model_name:
         model_provider, model_name = model_name.split(":")
         model_provider = cast(ModelProvider, model_provider)
