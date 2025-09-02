@@ -16,35 +16,30 @@ async def write(state: State):
         model_name="qwen-flash", model_provider="dashscope"
     ).bind_tools([write_note], tool_choice="write_note")
 
-    summary_model = load_chat_model(model_name="qwen-flash", model_provider="dashscope")
-
-    chain1 = ChatPromptTemplate.from_template(WRITE_PROMPT) | write_model
-    chain2 = ChatPromptTemplate.from_template(SUMMARY_PROMPT) | summary_model
+    chain = ChatPromptTemplate.from_template(WRITE_PROMPT) | write_model
 
     task_content = task_messages[-1].content
 
     # 使用create_task启动两个任务
-    coro1 = chain1.ainvoke({"task_result": task_content})
-    coro2 = chain2.ainvoke({"task_result": task_content})
-    task1 = asyncio.create_task(coro1)
-    task2 = asyncio.create_task(coro2)
-    
-    # 等待两个并发任务完成
-    result1 = await task1
-    result2 = await task2
-
-    response = cast(AIMessage, result1)
-    summary = cast(AIMessage, result2)
-
-    file_name = response.tool_calls[0]["args"]["file_name"]
-
-    tool_call_id = cast(AIMessage, state["messages"][-1]).tool_calls[0]["id"]
+    response = cast(AIMessage, await chain.ainvoke({"task_result": task_content}))
 
     return {
         "write_note_messages": [response],
+    }
+
+
+async def summary(state: State):
+    task_messages = state["task_messages"] if "task_messages" in state else []
+    summary_model = load_chat_model(model_name="qwen-flash", model_provider="dashscope")
+    chain2 = ChatPromptTemplate.from_template(SUMMARY_PROMPT) | summary_model
+
+    task_content = task_messages[-1].content
+    response = cast(AIMessage, await chain2.ainvoke({"task_result": task_content}))
+    tool_call_id = cast(AIMessage, state["messages"][-1]).tool_calls[0]["id"]
+    return {
         "messages": [
             ToolMessage(
-                content=f"任务执行完成！任务保存的文件名是：{file_name}\n 任务结果摘要： {summary.content}",
+                content=f"任务执行完成！此任务结果摘要：{response.content}",
                 tool_call_id=tool_call_id,
             ),
         ],

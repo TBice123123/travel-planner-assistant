@@ -38,33 +38,31 @@ def update_todo(
     tool_call_id: Annotated[str, InjectedToolCallId],
     state: Annotated[State, InjectedState],
 ):
-    """用于更新todo的工具, 可以多次使用，每次使用都会更新todo列表。
+    """用于更新todo任务状态的工具，可以多次使用来更新任务进度。
+
     参数：
-    update_todos: list[Todo], 更新的todo列表，这是一个字典列表,对于该字典的内容如下：
-    每个字典包含两个字段：
-    content: str, todo内容
-    status: str, todo状态, 可选值有pending, in_progress, done，但是你传入的status的值只有可能是in_progress或者done
+    update_todos: list[Todo] - 需要更新的todo列表，每个元素是一个包含以下字段的字典：
+        - content: str, todo任务内容，必须与现有任务内容完全一致
+        - status: str, 任务状态，只能是"in_progress"（进行中）或"done"（已完成）
 
-    更新的时候，只需要传入要更新的todo列表即可，无需传入所有的todo列表。
+    使用说明：
+    1. 每次调用只需传入需要更新状态的任务，无需传入所有任务
+    2. 必须同时包含至少一个"done"状态的任务和至少一个"in_progress"状态的任务
+       - 将已完成的任务设置为"done"
+       - 将接下来要执行的任务设置为"in_progress"
+    3. content字段必须与现有任务内容精确匹配
 
-    注意：传入的update_todos中，status为in_progress和done的todo必须同时出现，即至少有一个status为in_progress的todo和至少有一个status为done的todo。
+    示例：
+    假设当前任务列表为：
+    1. 待办1 (in_progress)
+    2. 待办2 (pending)
+    3. 待办3 (pending)
 
-    例如当前的todo有：
-    1. 待办1
-    2. 待办2
-    3. 待办3
-    4. 待办4
-    5. 待办5
-    此时，完成了待办1，接下来需要完成待办2,则输入的todo_list应该为：
+    当完成"待办1"并准备开始"待办2"时，应传入：
     [
-        {"content":"待办1"，
-            "status":"done"
-        },
-        {"content":"待办2"，
-            "status":"in_progress"
-        }
+        {"content": "待办1", "status": "done"},
+        {"content": "待办2", "status": "in_progress"}
     ]
-
     """
 
     todo_list = state["todo"] if "todo" in state else []
@@ -162,10 +160,10 @@ def write_note(
 
 @tool
 def ls(state: Annotated[State, InjectedState]):
-    """列出笔记列表。
+    """列出所有已保存的笔记名称。
 
     返回：
-    list[str], 笔记列表
+    list[str]: 包含所有笔记文件名的列表
 
     """
     notes = state["note"] if "note" in state else {}
