@@ -8,9 +8,18 @@ from typing import cast
 # 支持的模型提供商类型定义
 # deepseek: DeepSeek API (深度求索)
 # dashscope: 阿里云 DashScope 平台 (包含通义千问等模型)
-# siliconflow: SiliconFlow 平台 (硅基流动，提供多种开源模型服务)
 # moonshot: Moonshot AI (月之暗面，提供 Kimi 等大模型)
-type ModelProvider = Literal["deepseek", "dashscope", "siliconflow", "moonshot"]
+# zhipuai: 智谱 (智谱，提供GLM大模型)
+# siliconflow: SiliconFlow 平台 (硅基流动，提供多种开源模型服务)
+
+
+type ModelProvider = Literal[
+    "deepseek",
+    "dashscope",
+    "zhipuai",
+    "siliconflow",
+    "moonshot",
+]
 
 
 def _get_model_name_and_provider(
@@ -39,6 +48,8 @@ def load_chat_model(
             model_provider = "deepseek"
         elif "moonshot" in model_name or "kimi" in model_name:
             model_provider = "moonshot"
+        elif "glm" in model_name:
+            model_provider = "zhipuai"
         else:
             raise ValueError(
                 f"Unsupported model name: {model_name}, please specify model_provider."
@@ -49,6 +60,14 @@ def load_chat_model(
     elif model_provider == "dashscope":
         kwargs["base_url"] = "https://dashscope.aliyuncs.com/compatible-mode/v1"
         return ChatQwen(model=model_name, **kwargs)
+    elif model_provider == "zhipuai":
+        if api_key := os.getenv("ZHIPU_API_KEY"):
+            kwargs["api_key"] = api_key
+        if "base_url" not in kwargs:
+            kwargs["base_url"] = (
+                os.getenv("ZHIPU_BASE_URL") or "https://open.bigmodel.cn/api/paas/v4"  # type: ignore
+            )
+        return init_chat_model(model_name, model_provider="openai", **kwargs)
     elif model_provider == "moonshot":
         if api_key := os.getenv("MOONSHOT_API_KEY"):
             kwargs["api_key"] = api_key
@@ -70,7 +89,7 @@ def load_chat_model(
 
 
 if __name__ == "__main__":
-    model = load_chat_model("kimi-k2-0711-preview")
+    model = load_chat_model("glm-4.5")
     from pydantic import BaseModel
 
     class User(BaseModel):
