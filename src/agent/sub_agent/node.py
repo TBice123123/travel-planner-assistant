@@ -8,7 +8,7 @@ from langgraph.types import Command
 from src.agent.state import State
 from src.agent.sub_agent.prompts import SUBAGENT_PROMPT
 from src.agent.tools import get_weather, query_note, tavily_search
-from langchain_openai_like import init_openai_like_chat_model
+from src.agent.utils.model import load_chat_model
 
 
 async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__end__"]]:
@@ -23,11 +23,11 @@ async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__e
         ]
     )
 
-    # model = init_openai_like_chat_model(
-    #     model="qwen3-235b-a22b-instruct-2507", provider="dashscope"
+    # model = load_chat_model(
+    #     model_name="qwen3-235b-a22b-instruct-2507", model_provider="dashscope"
     # ).bind_tools([get_weather, tavily_search, query_note])
 
-    model = init_openai_like_chat_model(model="glm-4.5", provider="zai").bind_tools(
+    model = load_chat_model(model_name="glm-4.5", model_provider="zai").bind_tools(
         [get_weather, tavily_search, query_note]
     )
 
