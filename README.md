@@ -1,4 +1,4 @@
-# deep-agent-langgraph
+# Travel-planner-Assistant
 
 该项目基于 langchain 官方的`deepagents`进行构建，但加入了许多个人的理解和改进，并适配了国内的多款顶尖模型。
 
@@ -7,13 +7,14 @@
 首先克隆本仓库
 
 ```bash
-git clone git@github.com:TBice123123/deep-agent-langgraph.git
+git clone https://github.com/TBice123123/Travel-planner-Assistant.git
+
 ```
 
 进入项目目录
 
 ```bash
-cd deep-agent-langgraph
+cd travel-planner-assistant
 ```
 
 安装项目依赖
