@@ -14,11 +14,11 @@ from src.agent.tools import (
     update_todo,
     write_todo,
 )
-from src.agent.utils import load_chat_model
+from langchain_openai_like import init_openai_like_chat_model
 
 
 async def call_model(state: State) -> Command[Literal["tools", "subagent", "__end__"]]:
-    model = load_chat_model(model_name="deepseek-chat", model_provider="deepseek")
+    model = init_openai_like_chat_model(model="deepseek-chat", provider="deepseek")
     tools = [
         write_todo,
         update_todo,

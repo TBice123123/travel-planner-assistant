@@ -7,9 +7,14 @@ requires-python = ">=3.12"
 dependencies = [
     "langchain>=0.3.27",
     "langchain-deepseek>=0.1.4",
+    "langchain-openai-like==0.1.1",
     "langchain-qwq>=0.2.1",
     "langchain-tavily>=0.2.11",
     "langgraph>=0.6.6",
     "langgraph-cli[inmem]>=0.3.8",
     "python-dotenv>=1.1.1",
 ]
+
+[[tool.uv.index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
