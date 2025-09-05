@@ -1,7 +1,8 @@
-from typing import Literal
+from typing import Literal, cast
 
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_dev_utils import has_tool_calling, load_chat_model
 from langgraph.prebuilt import ToolNode
 from langgraph.types import Command
 
@@ -14,11 +15,15 @@ from src.agent.tools import (
     update_todo,
     write_todo,
 )
-from src.agent.utils.model import load_chat_model
 
 
 async def call_model(state: State) -> Command[Literal["tools", "subagent", "__end__"]]:
-    model = load_chat_model(model_name="deepseek-chat", model_provider="deepseek")
+    # model = load_chat_model(model="deepseek-chat", model_provider="deepseek")
+
+    model = load_chat_model(
+        model="qwen3-235b-a22b-instruct-2507", model_provider="dashscope"
+    )
+
     tools = [
         write_todo,
         update_todo,
@@ -40,12 +45,8 @@ async def call_model(state: State) -> Command[Literal["tools", "subagent", "__en
 
     response = await chain.ainvoke({"message_placeholder": messages})
 
-    if (
-        isinstance(response, AIMessage)
-        and hasattr(response, "tool_calls")
-        and len(response.tool_calls) > 0
-    ):
-        tool_call_name = response.tool_calls[0]["name"]
+    if has_tool_calling(cast(AIMessage, response)):
+        tool_call_name = cast(AIMessage, response).tool_calls[0]["name"]
         if tool_call_name == "transfor_task_to_subagent":
             return Command(
                 goto="subagent",

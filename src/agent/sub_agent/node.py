@@ -8,7 +8,7 @@ from langgraph.types import Command
 from src.agent.state import State
 from src.agent.sub_agent.prompts import SUBAGENT_PROMPT
 from src.agent.tools import get_weather, query_note, tavily_search
-from src.agent.utils.model import load_chat_model
+from langchain_dev_utils import has_tool_calling, load_chat_model
 
 
 async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__end__"]]:
@@ -23,11 +23,7 @@ async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__e
         ]
     )
 
-    # model = load_chat_model(
-    #     model_name="qwen3-235b-a22b-instruct-2507", model_provider="dashscope"
-    # ).bind_tools([get_weather, tavily_search, query_note])
-
-    model = load_chat_model(model_name="glm-4.5", model_provider="zai").bind_tools(
+    model = load_chat_model(model="glm-4.5", model_provider="zai").bind_tools(
         [get_weather, tavily_search, query_note]
     )
 
@@ -52,11 +48,7 @@ async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__e
         }
     )
 
-    if (
-        isinstance(response, AIMessage)
-        and hasattr(response, "tool_calls")
-        and len(response.tool_calls) > 0
-    ):
+    if has_tool_calling(cast(AIMessage, response)):
         return Command(
             goto="sub_tools",
             update={"task_messages": [response]},

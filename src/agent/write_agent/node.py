@@ -3,7 +3,7 @@ from langchain_core.messages import AIMessage, ToolMessage
 from langchain_core.prompts import ChatPromptTemplate
 from src.agent.state import State
 from src.agent.tools import write_note
-from src.agent.utils.model import load_chat_model
+from langchain_dev_utils import load_chat_model
 from src.agent.write_agent.prompts import SUMMARY_PROMPT, WRITE_PROMPT
 from langgraph.prebuilt import ToolNode
 
@@ -12,7 +12,7 @@ async def write(state: State):
     task_messages = state["task_messages"] if "task_messages" in state else []
 
     write_model = load_chat_model(
-        model_name="qwen-flash", model_provider="dashscope"
+        model="qwen-flash", model_provider="dashscope"
     ).bind_tools([write_note], tool_choice="write_note")
 
     chain = ChatPromptTemplate.from_template(WRITE_PROMPT) | write_model
@@ -29,7 +29,7 @@ async def write(state: State):
 
 async def summary(state: State):
     task_messages = state["task_messages"] if "task_messages" in state else []
-    summary_model = load_chat_model(model_name="qwen-flash", model_provider="dashscope")
+    summary_model = load_chat_model(model="qwen-flash", model_provider="dashscope")
     chain2 = ChatPromptTemplate.from_template(SUMMARY_PROMPT) | summary_model
 
     task_content = task_messages[-1].content
