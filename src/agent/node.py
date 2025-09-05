@@ -1,12 +1,12 @@
 from typing import Literal, cast
 
-from langchain_core.messages import AIMessage
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.messages import AIMessage, SystemMessage
 from langchain_dev_utils import has_tool_calling, load_chat_model
 from langgraph.prebuilt import ToolNode
+from langgraph.runtime import get_runtime
 from langgraph.types import Command
 
-from src.agent.prompts import TODO_MODEL_PROMPT
+from src.agent.utils.context import Context
 from src.agent.state import State
 from src.agent.tools import (
     ls,
@@ -18,10 +18,9 @@ from src.agent.tools import (
 
 
 async def call_model(state: State) -> Command[Literal["tools", "subagent", "__end__"]]:
-    # model = load_chat_model(model="deepseek-chat", model_provider="deepseek")
-
+    run_time = get_runtime(Context)
     model = load_chat_model(
-        model="qwen3-235b-a22b-instruct-2507", model_provider="dashscope"
+        model=run_time.context.todo_model,
     )
 
     tools = [
@@ -34,16 +33,9 @@ async def call_model(state: State) -> Command[Literal["tools", "subagent", "__en
     bind_model = model.bind_tools(tools, parallel_tool_calls=False)
     messages = state["messages"]
 
-    template = ChatPromptTemplate.from_messages(
-        [
-            ("system", TODO_MODEL_PROMPT),
-            ("placeholder", "{message_placeholder}"),
-        ]
+    response = await bind_model.ainvoke(
+        [SystemMessage(content=run_time.context.todo_prompt), *messages]
     )
-
-    chain = template | bind_model
-
-    response = await chain.ainvoke({"message_placeholder": messages})
 
     if has_tool_calling(cast(AIMessage, response)):
         tool_call_name = cast(AIMessage, response).tool_calls[0]["name"]

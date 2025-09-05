@@ -41,5 +41,5 @@ cp .env.example .env
 启动项目
 
 ```bash
-uv run langgraph dev --host=localhost
+uv run langgraph dev --host=localhost --allow-blocking
 ```
