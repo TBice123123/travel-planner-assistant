@@ -1,12 +1,11 @@
 from typing import Literal, cast
 
 from langchain_core.messages import AIMessage, SystemMessage
-from langchain_dev_utils import has_tool_calling, load_chat_model
+from langchain_dev_utils import has_tool_calling, load_chat_model, parse_tool_calling
 from langgraph.prebuilt import ToolNode
 from langgraph.runtime import get_runtime
 from langgraph.types import Command
 
-from src.agent.utils.context import Context
 from src.agent.state import State
 from src.agent.tools import (
     ls,
@@ -15,6 +14,7 @@ from src.agent.tools import (
     update_todo,
     write_todo,
 )
+from src.agent.utils.context import Context
 
 
 async def call_model(state: State) -> Command[Literal["tools", "subagent", "__end__"]]:
@@ -38,8 +38,10 @@ async def call_model(state: State) -> Command[Literal["tools", "subagent", "__en
     )
 
     if has_tool_calling(cast(AIMessage, response)):
-        tool_call_name = cast(AIMessage, response).tool_calls[0]["name"]
-        if tool_call_name == "transfor_task_to_subagent":
+        name, _ = parse_tool_calling(
+            cast(AIMessage, response), first_tool_call_only=True
+        )
+        if name == "transfor_task_to_subagent":
             return Command(
                 goto="subagent",
                 update={

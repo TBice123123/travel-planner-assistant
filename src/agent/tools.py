@@ -2,11 +2,11 @@ from typing import Annotated
 
 from langchain_core.messages import ToolMessage
 from langchain_core.tools import InjectedToolCallId, tool
+from langchain_tavily.tavily_search import TavilySearch
 from langgraph.prebuilt import InjectedState
 from langgraph.types import Command
 
 from src.agent.state import State, Todo
-from langchain_tavily.tavily_search import TavilySearch
 
 
 @tool
@@ -200,7 +200,10 @@ def get_weather(city: str):
     return f"{city}的天气是晴天，温度是25度。"
 
 
-tavily_search = TavilySearch(
-    max_results=5,
-    description="互联网搜索工具，用于获取最新的网络信息和资料。注意：为控制上下文长度和降低调用成本，每个任务执行过程中仅可调用一次此工具。",
-)
+async def tavily_search(query: Annotated[str, "要搜索的内容"]):
+    """互联网搜索工具，用于获取最新的网络信息和资料。注意：为控制上下文长度和降低调用成本，每个任务执行过程中仅可调用一次此工具。"""
+    tavily_search = TavilySearch(
+        max_results=5,
+    )
+    result = await tavily_search.ainvoke({"query": query})
+    return result

@@ -1,11 +1,13 @@
 from typing import cast
-from langchain_core.messages import AIMessage, SystemMessage, ToolMessage
-from src.agent.state import State
-from src.agent.tools import write_note
+
+from langchain_core.messages import AIMessage, ToolMessage
 from langchain_dev_utils import load_chat_model
 from langgraph.prebuilt import ToolNode
-from src.agent.utils.context import Context
 from langgraph.runtime import get_runtime
+
+from src.agent.state import State
+from src.agent.tools import write_note
+from src.agent.utils.context import Context
 
 
 async def write(state: State):
@@ -13,7 +15,7 @@ async def write(state: State):
     task_messages = state["task_messages"] if "task_messages" in state else []
 
     write_model = load_chat_model(
-        model=run_time.context.note_model,
+        model=run_time.context.write_model,
     ).bind_tools([write_note], tool_choice="write_note")
 
     task_content = task_messages[-1].content
@@ -21,14 +23,7 @@ async def write(state: State):
     response = cast(
         AIMessage,
         await write_model.ainvoke(
-            [
-                SystemMessage(
-                    content=run_time.context.note_prompt.format(
-                        task_result=task_content
-                    )
-                ),
-                *task_messages,
-            ]
+            run_time.context.write_prompt.format(task_result=task_content)
         ),
     )
 
@@ -46,14 +41,7 @@ async def summary(state: State):
     response = cast(
         AIMessage,
         await summary_model.ainvoke(
-            [
-                SystemMessage(
-                    content=run_time.context.summary_prompt.format(
-                        task_result=task_content
-                    )
-                ),
-                *task_messages,
-            ]
+            run_time.context.summary_prompt.format(task_result=task_content)
         ),
     )
     tool_call_id = cast(AIMessage, state["messages"][-1]).tool_calls[0]["id"]

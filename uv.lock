@@ -602,15 +602,15 @@ wheels = [
 
 [[package]]
 name = "langchain-dev-utils"
-version = "0.1.1"
+version = "0.1.2"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "langchain" },
     { name = "langgraph" },
 ]
-sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/1f/70/ba06d4b5b7ac8059791bb3a31c078e29d55e042f21770f8cc98df4d272b9/langchain_dev_utils-0.1.1.tar.gz", hash = "sha256:e1118019a2c30b8f04e1a881ec9d5713efb758de467a3018dca3a5e16b9e963f", size = 64542 }
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/90/2d/48c841a925a08969961ca4ba1f828770314a394e3ab268eb7675c1b4562d/langchain_dev_utils-0.1.2.tar.gz", hash = "sha256:44032501ab6816b2c80d9cf0159abd97c7d169cfb83897b62213083829593970", size = 70076 }
 wheels = [
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/ff/9d/52d12e87616ae0d1ae327e6fcdd9cc3b197102c449d072c4e97b3d53131d/langchain_dev_utils-0.1.1-py3-none-any.whl", hash = "sha256:5afcaef483a405578c541e0573d5ae1c78ff058ce702c19124682ad0b9b2a6c0", size = 8171 },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/66/8f/33429e92394e40da86d453bbb7947bf8a087b21ddddcc04723d0cd292542/langchain_dev_utils-0.1.2-py3-none-any.whl", hash = "sha256:dc64cbd21e87eb49c9487e392b9c378e3446b2d5178a5176fd9d56fc2bdc8306", size = 13007 },
 ]
 
 [[package]]
@@ -745,15 +745,15 @@ wheels = [
 
 [[package]]
 name = "langgraph-cli"
-version = "0.4.1"
+version = "0.4.2"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "click" },
     { name = "langgraph-sdk" },
 ]
-sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/ba/be/8c223d95c314e57b0cff4f18e35416a7a755999a5f8a9ab16437863e3d04/langgraph_cli-0.4.1.tar.gz", hash = "sha256:6fbe4d73cf6213bc3273c7283d5764f5b5e0970f9f4d6934176bf0231a47d380", size = 778355 }
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/86/f1/598f9e1784432d790a937de4c466ba8bed3d18ef6f56fe7394af6bc1f175/langgraph_cli-0.4.2.tar.gz", hash = "sha256:074d93a2ebb9c60629a83bc4c149e837bd09e51222d48daacb498299d818ee9f", size = 778645 }
 wheels = [
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/74/a6/f4471cb439acc4048e19da99f0ff0bbded17d057c2b8b812adf2dd6f41f6/langgraph_cli-0.4.1-py3-none-any.whl", hash = "sha256:6493fd7909a6f9340180cbcb4d7122121951a4424484ad18ab19ecf48cbae50a", size = 38031 },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/d3/35/92c5a0de3f08bbc245ba7c0b1d5f9a7edd025a1483bf4adde97864419825/langgraph_cli-0.4.2-py3-none-any.whl", hash = "sha256:d83b00f11f9840f153aeba5ad417b09cd7a5aa98ab4ad7f94e45fb089ed73785", size = 38045 },
 ]
 
 [package.optional-dependencies]

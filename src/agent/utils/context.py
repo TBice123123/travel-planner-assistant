@@ -1,4 +1,5 @@
-from dataclasses import field, dataclass
+from dataclasses import dataclass
+from typing import Annotated
 
 from src.agent.prompts.prompt import (
     SUBAGENT_PROMPT,
@@ -10,63 +11,13 @@ from src.agent.prompts.prompt import (
 
 @dataclass
 class Context:
-    todo_model: str = field(
-        default="dashscope:qwen3-235b-a22b-instruct-2507",
-        metadata={
-            "description": "用于执行todo任务规划和执行的模型",
-            "name": "todo_model",
-            "provider": "dashscope",
-        },
+    todo_model: Annotated[str, "用于执行todo任务规划和执行的模型"] = (
+        "moonshot:kimi-k2-0905-preview"
     )
-    sub_model: str = field(
-        default="zai:glm-4.5",
-        metadata={
-            "description": "用于执行每个任务的模型",
-            "name": "sub_model",
-            "provider": "zai",
-        },
-    )
-    note_model: str = field(
-        default="dashscope:qwen-flash",
-        metadata={
-            "description": "用于执行记笔记任务的模型",
-            "name": "note_model",
-            "provider": "dashscope",
-        },
-    )
-    summary_model: str = field(
-        default="dashscope:qwen-flash",
-        metadata={
-            "description": "用于执行总结任务的模型",
-            "name": "summary_model",
-            "provider": "dashscope",
-        },
-    )
-    todo_prompt: str = field(
-        default=TODO_MODEL_PROMPT,
-        metadata={
-            "description": "用于执行todo任务规划和执行的模型",
-            "name": "todo_prompt",
-        },
-    )
-    sub_prompt: str = field(
-        default=SUBAGENT_PROMPT,
-        metadata={
-            "description": "用于执行每个任务的模型",
-            "name": "sub_prompt",
-        },
-    )
-    note_prompt: str = field(
-        default=WRITE_PROMPT,
-        metadata={
-            "description": "用于执行记笔记任务的模型",
-            "name": "note_prompt",
-        },
-    )
-    summary_prompt: str = field(
-        default=SUMMARY_PROMPT,
-        metadata={
-            "description": "用于执行总结任务的模型",
-            "name": "summary_prompt",
-        },
-    )
+    sub_model: Annotated[str, "用于执行每个任务的模型"] = "deepseek:deepseek-chat"
+    write_model: Annotated[str, "用于执行记笔记任务的模型"] = "dashscope:qwen-flash"
+    summary_model: Annotated[str, "用于执行总结任务的模型"] = "zai:glm-4.5-air"
+    todo_prompt: Annotated[str, "用于执行todo任务的prompt"] = TODO_MODEL_PROMPT
+    sub_prompt: Annotated[str, "用于执行每个任务的prompt"] = SUBAGENT_PROMPT
+    write_prompt: Annotated[str, "用于执行记笔记任务的prompt"] = WRITE_PROMPT
+    summary_prompt: Annotated[str, "用于执行总结任务的prompt"] = SUMMARY_PROMPT

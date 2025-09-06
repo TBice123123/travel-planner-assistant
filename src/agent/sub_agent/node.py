@@ -1,14 +1,18 @@
 from typing import Literal, cast
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_dev_utils import (
+    has_tool_calling,
+    load_chat_model,
+    message_format,
+    parse_tool_calling,
+)
 from langgraph.prebuilt import ToolNode
+from langgraph.runtime import get_runtime
 from langgraph.types import Command
 
 from src.agent.state import State
-
 from src.agent.tools import get_weather, query_note, tavily_search
-from langchain_dev_utils import has_tool_calling, load_chat_model
-from langgraph.runtime import get_runtime
 from src.agent.utils.context import Context
 
 
@@ -16,7 +20,8 @@ async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__e
     run_time = get_runtime(Context)
     last_ai_message = cast(AIMessage, state["messages"][-1])
 
-    task_name = last_ai_message.tool_calls[0]["args"].get("content", "")
+    _, args = parse_tool_calling(last_ai_message, first_tool_call_only=True)
+    task_name = cast(dict, args).get("content", "")
 
     model = load_chat_model(model=run_time.context.sub_model).bind_tools(
         [get_weather, tavily_search, query_note]
@@ -32,16 +37,15 @@ async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__e
 
     notes = state["note"] if "note" in state else {}
 
-    response = model.invoke(
+    user_requirement = state["messages"][0].content
+
+    response = await model.ainvoke(
         [
             SystemMessage(
                 content=run_time.context.sub_prompt.format(
                     task_name=task_name,
-                    history_files="\n".join(
-                        [f"- {note_name}" for note_name in notes.keys()]
-                    )
-                    or "暂无历史记录文件",
-                    user_requirement=state["messages"][0].content,
+                    history_files=message_format(list(notes.keys())),
+                    user_requirement=user_requirement,
                 )
             ),
             HumanMessage(content=f"我的任务是：{task_name}，请帮我完成"),
