@@ -602,15 +602,15 @@ wheels = [
 
 [[package]]
 name = "langchain-dev-utils"
-version = "0.1.2"
+version = "0.1.3"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
     { name = "langchain" },
     { name = "langgraph" },
 ]
-sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/90/2d/48c841a925a08969961ca4ba1f828770314a394e3ab268eb7675c1b4562d/langchain_dev_utils-0.1.2.tar.gz", hash = "sha256:44032501ab6816b2c80d9cf0159abd97c7d169cfb83897b62213083829593970", size = 70076 }
+sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/04/bf/48f7400c623b724663ce69aa9113e36c2a39d425e0e68a373801147f148b/langchain_dev_utils-0.1.3.tar.gz", hash = "sha256:58ba2f0cf4e1ea51819d06bc292642ddfcc8da55aadf5b600614510e3fcfd493", size = 70246 }
 wheels = [
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/66/8f/33429e92394e40da86d453bbb7947bf8a087b21ddddcc04723d0cd292542/langchain_dev_utils-0.1.2-py3-none-any.whl", hash = "sha256:dc64cbd21e87eb49c9487e392b9c378e3446b2d5178a5176fd9d56fc2bdc8306", size = 13007 },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/c8/7f/8a399a58ac88c984fabf54c27fffb0b028e36b8898c8b8aacd01337926d6/langchain_dev_utils-0.1.3-py3-none-any.whl", hash = "sha256:ad45f47ba6a0bd2c6b8efb2b5c5d233e774524bda75c5fe30a7efc45b72bee6d", size = 13055 },
 ]
 
 [[package]]
