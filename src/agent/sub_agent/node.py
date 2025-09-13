@@ -44,7 +44,9 @@ async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__e
             SystemMessage(
                 content=run_time.context.sub_prompt.format(
                     task_name=task_name,
-                    history_files=message_format(list(notes.keys())),
+                    history_files=message_format(list(notes.keys()))
+                    if notes
+                    else "当前没有笔记",
                     user_requirement=user_requirement,
                 )
             ),

@@ -15,7 +15,9 @@ class Context:
         "moonshot:kimi-k2-0905-preview"
     )
     sub_model: Annotated[str, "用于执行每个任务的模型"] = "deepseek:deepseek-chat"
-    write_model: Annotated[str, "用于执行记笔记任务的模型"] = "dashscope:qwen-flash"
+    write_model: Annotated[str, "用于执行记笔记任务的模型"] = (
+        "dashscope:qwen3-next-80b-a3b-instruct"
+    )
     summary_model: Annotated[str, "用于执行总结任务的模型"] = "zai:glm-4.5-air"
     todo_prompt: Annotated[str, "用于执行todo任务的prompt"] = TODO_MODEL_PROMPT
     sub_prompt: Annotated[str, "用于执行每个任务的prompt"] = SUBAGENT_PROMPT
