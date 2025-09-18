@@ -11,8 +11,8 @@ from src.agent.tools import (
     ls,
     query_note,
     transfor_task_to_subagent,
-    update_todo,
-    write_todo,
+    update_plan,
+    write_plan,
 )
 from src.agent.utils.context import Context
 
@@ -24,8 +24,8 @@ async def call_model(state: State) -> Command[Literal["tools", "subagent", "__en
     )
 
     tools = [
-        write_todo,
-        update_todo,
+        write_plan,
+        update_plan,
         transfor_task_to_subagent,
         ls,
         query_note,
@@ -57,4 +57,4 @@ async def call_model(state: State) -> Command[Literal["tools", "subagent", "__en
     return Command(goto="__end__", update={"messages": [response]})
 
 
-tool_node = ToolNode([write_todo, update_todo, ls, query_note])
+tool_node = ToolNode([write_plan, update_plan, ls, query_note])
