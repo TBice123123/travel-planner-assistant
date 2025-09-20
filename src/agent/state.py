@@ -5,15 +5,6 @@ from langgraph.graph.message import MessagesState, add_messages
 from langchain_dev_utils import PlanStateMixin, NoteStateMixin
 
 
-def file_reducer(l: dict | None, r: dict | None):  # noqa: E741
-    if l is None:
-        return r
-    elif r is None:
-        return l
-    else:
-        return {**l, **r}
-
-
 class StateInput(MessagesState):
     pass
 
