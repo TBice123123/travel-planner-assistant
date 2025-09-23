@@ -4,6 +4,7 @@ from langchain_core.tools import tool
 from langchain_tavily.tavily_search import TavilySearch
 
 from langchain_dev_utils import (
+    create_update_note_tool,
     create_write_note_tool,
     create_write_plan_tool,
     create_update_plan_tool,
@@ -80,6 +81,18 @@ write_note = create_write_note_tool(
     参数：
     content: str, 笔记内容
 
+    """,
+    message_key="write_note_messages",
+)
+
+update_note = create_update_note_tool(
+    name="update_note",
+    description="""用于更新笔记的工具。
+
+    参数：
+    file_name: str, 笔记名称
+    orignal_content: str, 笔记原始内容
+    new_content: str, 笔记更新后的内容
     """,
     message_key="write_note_messages",
 )

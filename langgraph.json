@@ -3,7 +3,7 @@
         "."
     ],
     "graphs": {
-        "todo-agent": "./src/agent/graph.py:build_graph_with_langgraph_studio"
+        "travel": "./src/agent/graph.py:build_graph_with_langgraph_studio"
     }
 }
 
