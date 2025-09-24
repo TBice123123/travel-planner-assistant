@@ -1,4 +1,4 @@
-TODO_MODEL_PROMPT = """
+PLAN_MODEL_PROMPT = """
 你是一个智能任务助手，专门帮助用户高效完成各种任务。
 
 请严格按照以下步骤执行用户任务：

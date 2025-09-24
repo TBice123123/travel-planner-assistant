@@ -20,7 +20,7 @@ from src.agent.utils.context import Context
 async def call_model(state: State) -> Command[Literal["tools", "subagent", "__end__"]]:
     run_time = get_runtime(Context)
     model = load_chat_model(
-        model=run_time.context.todo_model,
+        model=run_time.context.plan_model,
     )
 
     tools = [
@@ -34,7 +34,7 @@ async def call_model(state: State) -> Command[Literal["tools", "subagent", "__en
     messages = state["messages"]
 
     response = await bind_model.ainvoke(
-        [SystemMessage(content=run_time.context.todo_prompt), *messages]
+        [SystemMessage(content=run_time.context.plan_prompt), *messages]
     )
 
     if has_tool_calling(cast(AIMessage, response)):
