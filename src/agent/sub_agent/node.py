@@ -11,12 +11,14 @@ from langgraph.prebuilt import ToolNode
 from langgraph.runtime import get_runtime
 from langgraph.types import Command
 
-from src.agent.state import State
+from src.agent.sub_agent.state import SubAgentState
 from src.agent.tools import get_weather, query_note, tavily_search
 from src.agent.utils.context import Context
 
 
-async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__end__"]]:
+async def subagent_call_model(
+    state: SubAgentState,
+) -> Command[Literal["sub_tools", "__end__"]]:
     run_time = get_runtime(Context)
     last_ai_message = cast(AIMessage, state["messages"][-1])
 
@@ -27,13 +29,7 @@ async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__e
         [get_weather, tavily_search, query_note]
     )
 
-    task_messages = state["task_messages"] if "task_messages" in state else []
-
-    now_task_message_index = (
-        state["now_task_message_index"] if "now_task_message_index" in state else 0
-    )
-
-    messages = task_messages[now_task_message_index:]
+    messages = state["temp_task_messages"] if "temp_task_messages" in state else []
 
     notes = state["note"] if "note" in state else {}
 
@@ -58,17 +54,17 @@ async def subagent_call_model(state: State) -> Command[Literal["sub_tools", "__e
     if has_tool_calling(cast(AIMessage, response)):
         return Command(
             goto="sub_tools",
-            update={"task_messages": [response]},
+            update={"temp_task_messages": [response]},
         )
 
     return Command(
         goto="__end__",
         update={
-            "task_messages": [response],
+            "task_messages": [*state["temp_task_messages"], response],
         },
     )
 
 
 sub_tools = ToolNode(
-    [get_weather, tavily_search, query_note], messages_key="task_messages"
+    [get_weather, tavily_search, query_note], messages_key="temp_task_messages"
 )

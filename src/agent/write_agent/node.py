@@ -5,12 +5,12 @@ from langchain_dev_utils import load_chat_model
 from langgraph.prebuilt import ToolNode
 from langgraph.runtime import get_runtime
 
-from src.agent.state import State
+from src.agent.write_agent.state import WriteState
 from src.agent.tools import write_note
 from src.agent.utils.context import Context
 
 
-async def write(state: State):
+async def write(state: WriteState):
     run_time = get_runtime(Context)
     task_messages = state["task_messages"] if "task_messages" in state else []
 
@@ -28,11 +28,11 @@ async def write(state: State):
     )
 
     return {
-        "write_note_messages": [response],
+        "temp_write_note_messages": [response],
     }
 
 
-async def summary(state: State):
+async def summary(state: WriteState):
     run_time = get_runtime(Context)
     task_messages = state["task_messages"] if "task_messages" in state else []
     summary_model = load_chat_model(model=run_time.context.summary_model)
@@ -55,4 +55,4 @@ async def summary(state: State):
     }
 
 
-write_tool = ToolNode([write_note], messages_key="write_note_messages")
+write_tool = ToolNode([write_note], messages_key="temp_write_note_messages")

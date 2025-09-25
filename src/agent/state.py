@@ -11,5 +11,3 @@ class StateInput(MessagesState):
 
 class State(MessagesState, PlanStateMixin, NoteStateMixin, total=False):
     task_messages: Annotated[list[AnyMessage], add_messages]
-    now_task_message_index: int
-    write_note_messages: Annotated[list[AnyMessage], add_messages]
