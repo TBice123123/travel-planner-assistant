@@ -82,7 +82,7 @@ write_note = create_write_note_tool(
     content: str, 笔记内容
 
     """,
-    message_key="temp_write_note_messages",
+    message_key="temp_task_messages",
 )
 
 update_note = create_update_note_tool(
@@ -94,7 +94,7 @@ update_note = create_update_note_tool(
     orignal_content: str, 笔记原始内容
     new_content: str, 笔记更新后的内容
     """,
-    message_key="temp_write_note_messages",
+    message_key="temp_task_messages",
 )
 
 
