@@ -37,9 +37,9 @@ async def subagent_call_model(
         [get_weather, tavily_search, query_note, write_note]
     )
 
-    messages = state["temp_task_messages"] if "temp_task_messages" in state else []
+    messages = state.get("temp_task_messages", [])
 
-    notes = state["note"] if "note" in state else {}
+    notes = state.get("note", {})
 
     user_requirement = state["messages"][0].content
 
@@ -77,7 +77,7 @@ async def subagent_call_model(
     return Command(
         goto="__end__",
         update={
-            "task_messages": [*state["temp_task_messages"], response],
+            "task_messages": [*messages, response],
         },
     )
 

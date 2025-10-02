@@ -13,7 +13,7 @@ write_tool = ToolNode([write_note], messages_key="temp_task_messages")
 
 async def summary(state: SubAgentState):
     run_time = get_runtime(Context)
-    task_messages = state["temp_task_messages"] if "temp_task_messages" in state else []
+    task_messages = state.get("temp_task_messages", [])
     summary_model = load_chat_model(model=run_time.context.summary_model)
 
     _, args = parse_tool_calling(
