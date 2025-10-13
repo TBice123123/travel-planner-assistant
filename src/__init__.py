@@ -15,12 +15,12 @@ batch_register_model_provider(
         },
         {
             "provider": "zai",
-            "chat_model": "openai",
+            "chat_model": "openai-compatible",
             "base_url": "https://open.bigmodel.cn/api/paas/v4",
         },
         {
             "provider": "moonshot",
-            "chat_model": "openai",
+            "chat_model": "openai-compatible",
             "base_url": "https://api.moonshot.cn/v1",
         },
     ]
