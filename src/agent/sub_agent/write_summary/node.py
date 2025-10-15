@@ -14,12 +14,12 @@ write_tool = ToolNode([write_note], messages_key="temp_task_messages")
 async def summary(state: SubAgentState):
     run_time = get_runtime(Context)
     task_messages = state.get("temp_task_messages", [])
-    summary_model = load_chat_model(model=run_time.context.summary_model)
+    summary_model = load_chat_model(model=run_time.context.summary_model)  # 不具备工具调用能力，只是单纯的摘要总结
 
     _, args = parse_tool_calling(
         cast(AIMessage, task_messages[-1]), first_tool_call_only=True
     )
-    task_content = cast(dict, args).get("content", "")
+    task_content = cast(dict, args).get("content", "") # 获取待办事项内容
     response = cast(
         AIMessage,
         await summary_model.ainvoke(
@@ -33,7 +33,7 @@ async def summary(state: SubAgentState):
                 content=response.content,
                 tool_call_id=tool_call_id,
             )
-        ],
+        ],  # 手动构建ToolMessage，因为summary_model不具备工具调用能力，只是单纯的摘要总结
     }
 
 

@@ -15,10 +15,11 @@ from langchain_dev_utils import (
 
 write_plan = create_write_plan_tool(
     name="write_plan",
-    description="""用于写入计划的工具,只能使用一次，在最开始的时候使用，后续请使用update_plan更新。
-参数：
-plan: list[str], 待写入的计划列表，这是一个字符串列表，每个字符串都是一个计划内容content
-""",
+    description="""
+        用于写入计划的工具,只能使用一次，在最开始的时候使用，后续请使用update_plan更新。
+        参数：
+            plan: list[str], 待写入的计划列表，这是一个字符串列表，每个字符串都是一个计划内容content
+    """,
 )
 
 update_plan = create_update_plan_tool(

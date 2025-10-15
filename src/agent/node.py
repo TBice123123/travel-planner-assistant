@@ -18,10 +18,10 @@ from src.agent.utils.context import Context
 
 
 async def call_model(state: State) -> Command[Literal["tools", "subagent", "__end__"]]:
-    run_time = get_runtime(Context)
+    run_time = get_runtime(Context)   # 获取运行时环境，也就是上下文配置
     model = load_chat_model(
         model=run_time.context.plan_model,
-    )
+    )  # 加载主agent模型
 
     tools = [
         write_plan,
@@ -30,31 +30,31 @@ async def call_model(state: State) -> Command[Literal["tools", "subagent", "__en
         ls,
         query_note,
     ]
-    bind_model = model.bind_tools(tools, parallel_tool_calls=False)
+    bind_model = model.bind_tools(tools, parallel_tool_calls=False)  # 这里表示不进行并行调用工具
     messages = state["messages"]
 
     response = await bind_model.ainvoke(
         [SystemMessage(content=run_time.context.plan_prompt), *messages]
     )
 
-    if has_tool_calling(cast(AIMessage, response)):
+    if has_tool_calling(cast(AIMessage, response)):  # 判断是否需要调用工具
         name, _ = parse_tool_calling(
             cast(AIMessage, response), first_tool_call_only=True
         )
-        if name == "transfor_task_to_subagent":
+        if name == "transfor_task_to_subagent":  # 转移到subagent执行
             return Command(
                 goto="subagent",
                 update={
                     "messages": [response],
                     "now_task_message_index": len(
                         state["task_messages"] if "task_messages" in state else []
-                    ),
+                    ), # 动态添加到state中
                 },
             )
 
-        return Command(goto="tools", update={"messages": [response]})
+        return Command(goto="tools", update={"messages": [response]})  # 转移到tools执行
 
     return Command(goto="__end__", update={"messages": [response]})
 
 
-tool_node = ToolNode([write_plan, update_plan, ls, query_note])
+tool_node = ToolNode([write_plan, update_plan, ls, query_note])  # 工具节点
